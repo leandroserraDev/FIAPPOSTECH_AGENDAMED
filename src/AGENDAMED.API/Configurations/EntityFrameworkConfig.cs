@@ -5,11 +5,12 @@ namespace AGENDAMED.API.Configurations
 {
     public static class EntityFrameworkConfig
     {
-        public static IServiceCollection Configuration(this IServiceCollection _services, WebApplicationBuilder builder)
+        public static IServiceCollection ConfigureEntityFramework(this IServiceCollection _services)
         {
+            var builder = new ConfigurationBuilder().Build();
 
             _services.AddDbContext<ApplicationContext>(options=> {
-                options.UseNpgsql(builder.Configuration.GetConnectionString("Connection"));
+                options.UseNpgsql(builder.GetConnectionString("Connection"));
             });
 
             return _services;
