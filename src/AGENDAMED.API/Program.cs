@@ -12,7 +12,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.ConfigureEntityFramework();
 builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT();
+builder.Services.DepencyInjectionConfigure();
 builder.Services.ConfigureSwagger();
+builder.Services.AddCors(); 
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
 
 
@@ -26,6 +29,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseCors(options => options.WithOrigins().AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 app.MapControllers();
 
 app.Run();

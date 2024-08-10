@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using System.Globalization;
 
 namespace AGENDAMED.API.Controllers
 {
@@ -29,5 +30,7 @@ namespace AGENDAMED.API.Controllers
             })
             .ToArray();
         }
+     
     }
+
 }

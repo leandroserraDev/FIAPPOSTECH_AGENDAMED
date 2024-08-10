@@ -22,6 +22,316 @@ namespace AGENDAMED.Infra.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.address.Address", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<string>("CEP")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Number")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("UF")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Address", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.appointment.Appointment", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("DoctorID")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("PatientID")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<long>("SpecialityID")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("DoctorID");
+
+                    b.HasIndex("PatientID");
+
+                    b.HasIndex("SpecialityID");
+
+                    b.ToTable("Appointment", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.speciality.Speciality", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Speciality");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.Doctor", b =>
+                {
+                    b.Property<string>("UserID")
+                        .HasColumnType("text");
+
+                    b.Property<string>("CRM")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("UserID");
+
+                    b.ToTable("Doctor");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", b =>
+                {
+                    b.Property<string>("DoctorID")
+                        .HasColumnType("text");
+
+                    b.Property<long>("SpecialtyID")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("DoctorID", "SpecialtyID");
+
+                    b.HasIndex("SpecialtyID");
+
+                    b.ToTable("DoctorSpecialities", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", b =>
+                {
+                    b.Property<string>("DoctorID")
+                        .HasColumnType("text");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("Speciality")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("DoctorID", "DayOfWeek", "Speciality");
+
+                    b.HasIndex("DoctorID", "Speciality");
+
+                    b.ToTable("Schedule", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", b =>
+                {
+                    b.Property<string>("DoctorID")
+                        .HasColumnType("text");
+
+                    b.Property<long>("SpecialityID")
+                        .HasColumnType("bigint");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("DoctorID", "SpecialityID");
+
+                    b.ToTable("ScheduleSpecialityDoctor", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleTime", b =>
+                {
+                    b.Property<string>("DoctorID")
+                        .HasColumnType("text");
+
+                    b.Property<int>("DayOfWeek")
+                        .HasColumnType("integer");
+
+                    b.Property<long>("Speciality")
+                        .HasColumnType("bigint");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("interval");
+
+                    b.HasKey("DoctorID", "DayOfWeek", "Speciality", "Time");
+
+                    b.ToTable("ScheduleHour", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.patient.Patient", b =>
+                {
+                    b.Property<string>("UserID")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("Deleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("DtCreated")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DtModified")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("UserID");
+
+                    b.ToTable("Patient", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.User", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -71,70 +381,6 @@ namespace AGENDAMED.Infra.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
-
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("text");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("text");
-
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
-
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex");
-
-                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -218,6 +464,95 @@ namespace AGENDAMED.Infra.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.appointment.Appointment", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.Doctor", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("AGENDAMED.Domain.Entities.user.patient.Patient", "Patient")
+                        .WithMany()
+                        .HasForeignKey("PatientID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("AGENDAMED.Domain.Entities.speciality.Speciality", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialityID")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
+
+                    b.Navigation("Speciality");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.Doctor", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
+                        .WithOne("Doctor")
+                        .HasForeignKey("AGENDAMED.Domain.Entities.user.doctor.Doctor", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.Doctor", null)
+                        .WithMany("Specialities")
+                        .HasForeignKey("DoctorID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AGENDAMED.Domain.Entities.speciality.Speciality", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialtyID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Speciality");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", null)
+                        .WithMany("Schedule")
+                        .HasForeignKey("DoctorID", "Speciality")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", null)
+                        .WithMany("SchedulesSpecialityDoctor")
+                        .HasForeignKey("DoctorID", "SpecialityID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleTime", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", null)
+                        .WithMany("ScheduleTime")
+                        .HasForeignKey("DoctorID", "DayOfWeek", "Speciality")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.patient.Patient", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
+                        .WithOne("Patient")
+                        .HasForeignKey("AGENDAMED.Domain.Entities.user.patient.Patient", "UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -229,7 +564,7 @@ namespace AGENDAMED.Infra.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -238,7 +573,7 @@ namespace AGENDAMED.Infra.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -253,7 +588,7 @@ namespace AGENDAMED.Infra.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -262,11 +597,38 @@ namespace AGENDAMED.Infra.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.Doctor", b =>
+                {
+                    b.Navigation("Specialities");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", b =>
+                {
+                    b.Navigation("SchedulesSpecialityDoctor");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", b =>
+                {
+                    b.Navigation("ScheduleTime");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", b =>
+                {
+                    b.Navigation("Schedule");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.User", b =>
+                {
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 #pragma warning restore 612, 618
         }

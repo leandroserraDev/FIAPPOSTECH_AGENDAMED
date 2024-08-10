@@ -1,4 +1,5 @@
-﻿using AGENDAMED.Infra.Context;
+﻿using AGENDAMED.Domain.Entities.user;
+using AGENDAMED.Infra.Context;
 using Microsoft.AspNetCore.Identity;
 
 namespace AGENDAMED.API.Configurations
@@ -7,7 +8,7 @@ namespace AGENDAMED.API.Configurations
     {
         public static IServiceCollection ConfigureIdentity(this IServiceCollection services)
         {
-            services.AddIdentityCore<IdentityUser>(options =>
+            services.AddIdentityCore<User>(options =>
             {
             })
             .AddRoles<IdentityRole>()
@@ -23,13 +24,14 @@ namespace AGENDAMED.API.Configurations
                 options.Password.RequiredLength = 6;
                 options.Password.RequiredUniqueChars = 1;
 
+
                 // Default SignIn settings.
                 options.SignIn.RequireConfirmedEmail = false;
                 options.SignIn.RequireConfirmedPhoneNumber = false;
 
                 // Default User settings.
                 options.User.AllowedUserNameCharacters =
-                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 -._@+";
                 options.User.RequireUniqueEmail = true;
 
             });
