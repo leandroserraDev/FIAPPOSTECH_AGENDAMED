@@ -22,6 +22,11 @@ namespace AGENDAMED.Domain.ValueObject
         public DateTime DtModified { get; private set; }
         public bool Deleted { get; private set; }
 
+        public void MudarStatus()
+        {
+            Deleted = !Deleted;
+        } 
+
 
     }
 }

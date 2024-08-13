@@ -9,7 +9,7 @@ namespace AGENDAMED.Domain.Interface.Services.notification
 {
     public interface INotificationErrorService
     {
-        Task<List<Notification>> Notifications();
+        List<Notification> Notifications();
         Task<List<Notification>> AddNotification(string message);
         Task<bool> HasNotifications();
     }

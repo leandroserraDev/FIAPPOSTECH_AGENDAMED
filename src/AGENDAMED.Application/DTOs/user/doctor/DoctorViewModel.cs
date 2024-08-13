@@ -15,6 +15,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor
             Nome = user.Name;
             Sobrenome = user.LastName;
             Email = user.Email;
+            CRM = user.Doctor.CRM;
 
             Specialities = new List<Specialities>();
             foreach (var item in user.Doctor.Specialities)
@@ -26,7 +27,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor
         public string Id { get; set; }
         public string Nome { get; set; }
         public string Sobrenome{ get; set; }
-
+        public string CRM { get; set; }
         public string Email { get; set; }
         public List<Specialities> Specialities { get; set; }
     }

@@ -41,6 +41,13 @@ namespace AGENDAMED.Application.AppServices.user.doctor
 
         }
 
+        public async Task<DoctorViewModel> GetDoctorById(string doctorID)
+        {
+            var result = await _userService.GetUserDoctorById(doctorID);
+            return await Task.FromResult(new DoctorViewModel(result));
+
+        }
+
         public async Task<IList<DoctorViewModel>> GetDoctors()
         {
             var result = await _userService.GetUsersDoctor();

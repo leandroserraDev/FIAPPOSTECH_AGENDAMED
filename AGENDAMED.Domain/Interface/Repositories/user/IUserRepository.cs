@@ -14,6 +14,8 @@ namespace AGENDAMED.Domain.Interface.Repositories.user
         Task<List<User>> GetUsersDoctor();
         Task<List<User>> GetUsersPatients();
         Task<User> GetUserDoctor(string id);
+        Task<User> GetUserDoctorById(string doctorID);
+
         Task<User> GetUserDoctorEmail(string email);
 
 

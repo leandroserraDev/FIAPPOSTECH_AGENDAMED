@@ -9,6 +9,7 @@ namespace AGENDAMED.Domain.Enums
     public enum ESpecialty
     {
         Geral =1,
-        Ortopedista =2
+        Ortopedista =2,
+        Pediatra =3
     }
 }

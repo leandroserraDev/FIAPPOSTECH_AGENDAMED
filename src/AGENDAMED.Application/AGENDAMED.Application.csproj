@@ -10,4 +10,8 @@
     <ProjectReference Include="..\..\AGENDAMED.Domain\AGENDAMED.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="DTOs\speciality\doctor\" />
+  </ItemGroup>
+
 </Project>

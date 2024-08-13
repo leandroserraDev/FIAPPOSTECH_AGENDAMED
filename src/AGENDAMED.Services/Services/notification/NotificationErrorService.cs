@@ -28,9 +28,9 @@ namespace AGENDAMED.Services.Services.notification
             return await Task.FromResult(_notifications.Count() > 0);
         }
 
-        public async Task<List<Notification>> Notifications()
+        public List<Notification> Notifications()
         {
-            return await Task.FromResult(_notifications);
+            return _notifications;
         }
     }
 }

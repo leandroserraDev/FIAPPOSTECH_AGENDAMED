@@ -1,7 +1,7 @@
-﻿using AGENDAMED.Application.DTOs.speciality.doctor;
-using AGENDAMED.Application.DTOs.user;
+﻿using AGENDAMED.Application.DTOs.user;
 using AGENDAMED.Application.DTOs.user.doctor;
 using AGENDAMED.Application.DTOs.user.doctor.schedule;
+using AGENDAMED.Application.DTOs.user.doctor.speciality;
 using AGENDAMED.Application.DTOs.user.patient;
 using AGENDAMED.Application.Interface.AppServices.speciality;
 using AGENDAMED.Application.Interface.AppServices.user.doctor;
@@ -86,6 +86,23 @@ namespace AGENDAMED.API.Controllers
 
             return Ok(result);
         }
+        [HttpGet("{doctorID}")]
+        public async Task<IActionResult> GetDoctorById(string doctorID)
+        {
+            if (!ModelState.IsValid)
+            {
+
+                return BadRequest();
+            }
+
+            var result = await _userDoctorAppService.GetDoctorById(doctorID);
+            if (result == null)
+            {
+                return BadRequest();
+            }
+
+            return Ok(result);
+        }
         #endregion
 
         #region Schedule
@@ -130,11 +147,13 @@ namespace AGENDAMED.API.Controllers
         [HttpGet("{doctorID}/speciality")]
         public async Task<IActionResult> GetSpecialitiesDoctor(string doctorID)
         {
-            var result = await _doctorSpecialityAppService.GetSpecialityDoctor(doctorID);
+            var result = await _doctorSpecialityAppService.GetDoctorSpecialities(doctorID);
 
 
             return Ok(new {data= result });
         }
+
+
 
 
         [HttpPost("speciality")]
@@ -150,10 +169,10 @@ namespace AGENDAMED.API.Controllers
             return Ok(new {data = result});
         }
 
-        [HttpDelete("speciality/{doctorID}/{specialityID}")]
-        public async Task<IActionResult> Delete(string doctorID, long specialityID)
+        [HttpPatch("{doctorID}/speciality/{specialityID}/mudarstatus")]
+        public async Task<IActionResult> MudarStatus(string doctorID, long specialityID)
         {
-            var result = await _doctorSpecialityAppService.Delete(doctorID,specialityID);
+            var result = await _doctorSpecialityAppService.MudarStatus(doctorID,specialityID);
 
             if (await _notificationErrorService.HasNotifications())
             {

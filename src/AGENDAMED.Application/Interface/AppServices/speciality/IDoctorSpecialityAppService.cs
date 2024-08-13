@@ -1,4 +1,5 @@
-﻿using AGENDAMED.Application.DTOs.speciality.doctor;
+﻿using AGENDAMED.Application.DTOs.user.doctor.speciality;
+using AGENDAMED.Domain.Entities.user.doctor;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,8 +10,10 @@ namespace AGENDAMED.Application.Interface.AppServices.speciality
 {
     public interface IDoctorSpecialityAppService
     {
-        Task<bool> Delete(string doctorID, long specialityID);
+        Task<bool> MudarStatus(string doctorID, long specialityID);
         Task<DoctorSpecialityCreateViewModel> Create(DoctorSpecialityCreateViewModel objet);
-        Task<DoctorSpecialityCreateViewModel> GetSpecialityDoctor(string doctorID);
+        Task<DoctorSpecialityViewModel> GetSpecialityDoctor(string doctorID);
+        Task<IList<DoctorSpecialityViewModel>> GetDoctorSpecialities(string doctorID);
+
     }
 }

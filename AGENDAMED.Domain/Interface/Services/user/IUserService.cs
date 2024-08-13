@@ -16,6 +16,7 @@ namespace AGENDAMED.Domain.Interface.Services.user
         Task<User> UpdateDoctor(string id,User user);
         Task<User> DeleteDoctor(User user);
         Task<List<User>> GetUsersDoctor();
+        Task<User> GetUserDoctorById(string doctorID); 
         Task<User> GetDoctorById(string id);
         Task<User> GetPatientById(string id);
 

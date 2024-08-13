@@ -76,7 +76,7 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
 
             predicadeBuilder = predicadeBuilder.And(obj => obj.DoctorID.Equals(doctorID) && !obj.Deleted)
                                                .And(obj => obj.SpecialityID.Equals((long)speciality))
-                                               .And(obj => obj.Schedule.Select(sc => sc.DayOfWeek).Equals(dataAppointment.DayOfWeek));
+                                               .And(obj => obj.Schedule.Select(sc => sc.DayOfWeek).Contains(dataAppointment.DayOfWeek));
 
             var result = await _scheduleDoctorSpecialityRepository.GetScheduleSpecialitieDoctor(predicadeBuilder);
 
@@ -89,7 +89,7 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
 
             result.Schedule.Select(obj => obj.ScheduleTime)
                 .ToList()
-                .RemoveAll(st => st.Select(stm => stm.Time.ToString("HH:MM")).Contains(dataAppointment.ToString("HH:MM")));
+                .RemoveAll(st => st.Select(stm => stm.Time.ToString()).Contains(dataAppointment.ToString("hh:mm")));
 
 
 

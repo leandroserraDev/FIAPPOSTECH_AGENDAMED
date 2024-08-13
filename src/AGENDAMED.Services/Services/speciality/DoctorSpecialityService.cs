@@ -6,6 +6,7 @@ using AGENDAMED.Domain.Interface.Services.speciality;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -41,11 +42,20 @@ namespace AGENDAMED.Services.Services.speciality
             return await base.Create(entity);
         }
 
-        public async Task<bool> DeleteSpeciality(string doctorID, long specialityID)
+        public async Task<bool> MudarStatus(string doctorID, long specialityID)
         {
-            var result = await _doctorSpecialityRepository.DeleteSpeciality(doctorID, specialityID);
+            var result = await _doctorSpecialityRepository.GetDoctorSpeciality(obj => obj.DoctorID.Equals(doctorID) && obj.SpecialtyID.Equals(specialityID));
 
-            return result;
+            result.MudarStatus();
+
+            await _doctorSpecialityRepository.Update(result);
+
+            return true;
+        }
+
+        public  async Task<IList<DoctorSpecialities>> GetDoctorSpecialities(string doctorID)
+        {
+            return await _doctorSpecialityRepository.GetDoctorSpecialities(obj => obj.DoctorID.Equals(doctorID));
         }
 
         public async Task<DoctorSpecialities> GetDoctorSpeciality(string doctorID)

@@ -6,7 +6,9 @@ using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user;
 using AGENDAMED.Domain.ValueObject;
+using AGENDAMED.Services.Services.email.doctor;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -23,18 +25,21 @@ namespace AGENDAMED.Services.Services.user
         private readonly IUserRepository _userRepository;
         private readonly INotificationErrorService _notificationErrorService;
         private readonly IDoctorSpecialityRepository _doctorSpecialityRepository;
+        private readonly IConfiguration _configuration;
         private readonly UserManager<User> _userManager;
 
         public UserService(IUserRepository userRepository,
                            UserManager<User> userManager,
                            INotificationErrorService notificationErrorService,
-                           IDoctorSpecialityRepository doctorSpecialityRepository)
+                           IDoctorSpecialityRepository doctorSpecialityRepository,
+                           IConfiguration configuration)
             : base(userRepository)
         {
             _userRepository = userRepository;
             _userManager = userManager;
             _notificationErrorService = notificationErrorService;
             _doctorSpecialityRepository = doctorSpecialityRepository;
+            _configuration = configuration;
         }
 
         public async Task<List<User>> GetUsersDoctor()
@@ -136,7 +141,9 @@ namespace AGENDAMED.Services.Services.user
             await _userManager.AddToRoleAsync(user, "Doctor");
 
             //enviar email para o doutor com a senha.....
-
+            var emailCreate = new EmailCreateDoctor(user.Email,
+                $"Foi criado uma conta para você: Sua senha para acesso ao sistema: {password}", "Senha de acesso", _configuration);
+            emailCreate.SendEmail();
             return await _userRepository.GetUserDoctorEmail(user.Email);
         }
 
@@ -152,6 +159,7 @@ namespace AGENDAMED.Services.Services.user
 
             userBD.Name = user.Name;
             userBD.LastName = user.LastName;
+            userBD.Doctor.CRM = user.Doctor.CRM;
             //await _doctorSpecialityRepository.DeleteSpecialtyDoctor(userBD.Id);
 
             var result = await _userRepository.Update(userBD);
@@ -203,6 +211,12 @@ namespace AGENDAMED.Services.Services.user
             while (regexItem.IsMatch(password));
 
             return password;
+        }
+
+        public async Task<User> GetUserDoctorById(string doctorID)
+        {
+            var result = await _userRepository.GetUserDoctorById(doctorID);
+            return await Task.FromResult(result);
         }
     }
 }

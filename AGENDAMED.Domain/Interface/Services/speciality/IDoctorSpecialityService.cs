@@ -11,7 +11,8 @@ namespace AGENDAMED.Domain.Interface.Services.speciality
     public interface IDoctorSpecialityService : IServiceBase<DoctorSpecialities>
     {
         Task<DoctorSpecialities> GetDoctorSpeciality(string doctorID);
-        Task<bool> DeleteSpeciality(string doctorID, long specialityID);
+        Task<IList<DoctorSpecialities>> GetDoctorSpecialities(string doctorID);
+        Task<bool> MudarStatus(string doctorID, long specialityID);
 
 
     }

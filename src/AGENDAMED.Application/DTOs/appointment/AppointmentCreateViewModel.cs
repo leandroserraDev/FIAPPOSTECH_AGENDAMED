@@ -1,4 +1,5 @@
 ﻿using AGENDAMED.Domain.Entities.appointment;
+using AGENDAMED.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,10 @@ namespace AGENDAMED.Application.DTOs.appointment
         public string PatientID { get; set; }
         public string DoctorID { get; set; }
         public DateTime DateAppointment { get; set; }
-
+        public ESpecialty ESpecialty { get; set; }
         public Appointment ToDomain()
         {
-            var newAppointment = new Appointment();
+            var newAppointment = new Appointment(PatientID, DoctorID, (long)ESpecialty, DateAppointment);
 
             return newAppointment;
         }

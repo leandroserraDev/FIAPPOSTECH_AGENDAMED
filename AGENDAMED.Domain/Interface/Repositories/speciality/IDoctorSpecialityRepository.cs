@@ -12,6 +12,8 @@ namespace AGENDAMED.Domain.Interface.Repositories.speciality
     public interface IDoctorSpecialityRepository : IRepositoryBase<DoctorSpecialities>
     {
         Task<DoctorSpecialities> GetDoctorSpeciality(Expression<Func<DoctorSpecialities, bool>> expression);
+        Task<IList<DoctorSpecialities>> GetDoctorSpecialities(Expression<Func<DoctorSpecialities, bool>> expression);
+
         Task<bool> DeleteSpeciality(string doctorID, long specialityID);
         Task<bool> DeleteSpecialtyDoctor(string doctorID);
 

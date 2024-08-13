@@ -56,6 +56,12 @@ namespace AGENDAMED.Infra.Repositories.speciality
 
         }
 
+        public async Task<IList<DoctorSpecialities>> GetDoctorSpecialities(Expression<Func<DoctorSpecialities, bool>> expression)
+        {
+            var result = await _context.DoctorSpecialities.Where(expression).OrderBy(obj => obj.DtCreated).ToListAsync();
+            return result;
+        }
+
         public async Task<DoctorSpecialities> GetDoctorSpeciality(Expression<Func<DoctorSpecialities, bool>> expression)
         {
             var result = await _context.DoctorSpecialities.FirstOrDefaultAsync(expression);
