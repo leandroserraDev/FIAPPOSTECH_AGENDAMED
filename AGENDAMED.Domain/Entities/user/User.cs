@@ -17,8 +17,8 @@ namespace AGENDAMED.Domain.Entities.user
 
         }
 
-        public string Name  { get; set; }
-        public string LastName { get; set; }
+        public string Name  {  get; set; }
+        public string LastName {  get; set; }
 
         public virtual Doctor? Doctor { get; set; }
         public virtual Patient?  Patient{ get; set; }

@@ -27,8 +27,8 @@ namespace AGENDAMED.Domain.Entities.user.doctor.schedule
             
         }
 
-        public string DoctorID { get; set; }
-        public long SpecialityID { get; set; }
-        public virtual List<Schedule> Schedule { get; set; }
+        public string DoctorID { get; private set; }
+        public long SpecialityID { get; private set; }
+        public virtual List<Schedule> Schedule { get;  set; }
     }
 }

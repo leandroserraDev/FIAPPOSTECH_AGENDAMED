@@ -34,10 +34,7 @@ namespace AGENDAMED.Infra.Repositories.user.schedule
                        DoctorID = obj.DoctorID,
                        Speciality = obj.SpecialityID,
                        DayOfWeek = sc.DayOfWeek,
-                       ScheduleTime = sc.ScheduleTime.Select(sh => new ScheduleTime()
-                       {
-                           Time = sh.Time
-                       }).ToList()
+                       ScheduleTime = sc.ScheduleTime.Select(st => new ScheduleTime(st.DoctorID, st.Speciality, st.DayOfWeek, st.Time)).ToList()
                    }).ToList()
                }
                ).ToListAsync();
@@ -57,13 +54,7 @@ namespace AGENDAMED.Infra.Repositories.user.schedule
                         DoctorID = obj.DoctorID,
                         Speciality = obj.SpecialityID,
                         DayOfWeek = sc.DayOfWeek,
-                        ScheduleTime = sc.ScheduleTime.Select(sh => new ScheduleTime()
-                        {
-                            DoctorID = sh.DoctorID,
-                            Speciality = sh.Speciality,
-                            DayOfWeek = sh.DayOfWeek,
-                            Time = sh.Time
-                        }).ToList()
+                        ScheduleTime = sc.ScheduleTime.Select(st => new ScheduleTime(st.DoctorID, st.Speciality, st.DayOfWeek, st.Time)).ToList()
                     }).ToList()
                 }
                 ).FirstOrDefault();

@@ -14,7 +14,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor.schedule
 
         public ScheduleTime ToDomain()
         {
-            var newScheduleHour = new ScheduleTime() { Time = TimeSpan.Parse(Time)};
+            var newScheduleHour = new ScheduleTime(TimeSpan.Parse(Time));
 
             return newScheduleHour;
         }
