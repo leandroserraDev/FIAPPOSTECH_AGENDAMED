@@ -19,8 +19,8 @@ namespace AGENDAMED.Domain.Entities.user.doctor.schedule
 
         public string DoctorID { get; set; }
         public long Speciality { get; set; }
-        public DayOfWeek DayOfWeek { get; set; }
-        public IList<ScheduleTime> ScheduleTime{ get; set; }
+        public long DayOfWeek { get; set; }
+        public virtual IList<ScheduleTime> ScheduleTime{ get; set; }
 
 
     }

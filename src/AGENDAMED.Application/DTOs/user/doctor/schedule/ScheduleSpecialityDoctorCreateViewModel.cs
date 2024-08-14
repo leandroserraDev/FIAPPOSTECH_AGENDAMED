@@ -11,7 +11,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor.schedule
     public class ScheduleSpecialityDoctorCreateViewModel
     {
         public string DoctorID { get; set; }
-        public ESpecialty Speciality{ get; set; }
+        public long Speciality { get; set; }
         public List<ScheduleCreateViewModel> Schedule{ get; set; }
 
         public ScheduleSpecialityDoctor ToDomain()

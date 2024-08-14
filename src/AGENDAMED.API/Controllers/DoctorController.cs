@@ -8,6 +8,7 @@ using AGENDAMED.Application.Interface.AppServices.user.doctor;
 using AGENDAMED.Application.Interface.AppServices.user.doctor.schedule;
 using AGENDAMED.Domain.Entities.user;
 using AGENDAMED.Domain.Entities.user.doctor;
+using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user;
@@ -109,7 +110,7 @@ namespace AGENDAMED.API.Controllers
         [HttpPost("schedule")]
         public async Task<IActionResult> CreateSchedule(ScheduleSpecialityDoctorCreateViewModel scheduleSpecialityDoctorCreateViewModel)
         {
-            var result = await _scheduleSpecialityDoctorAppService.Create(scheduleSpecialityDoctorCreateViewModel.ToDomain());
+                var result = await _scheduleSpecialityDoctorAppService.Create(scheduleSpecialityDoctorCreateViewModel.ToDomain());
 
             if(await _notificationErrorService.HasNotifications())
             {
@@ -123,11 +124,21 @@ namespace AGENDAMED.API.Controllers
         public async Task<IActionResult> GetScheduleDoctor(string doctorID)
         {
 
-            var result = await _scheduleRepository.GetSchedulesDoctor(doctorID);
+            var result = await _scheduleSpecialityDoctorAppService.GetSchedulesDoctor(doctorID);
 
             return Ok(result);
 
         }
+        [HttpGet("{doctorID}/schedule/{specialityID}")]
+        public async Task<IActionResult> GetScheduleDoctor(string doctorID, long specialityID)
+        {
+
+            var result = await _scheduleSpecialityDoctorAppService.GetScheduleSpecialitieDoctor(doctorID,(ESpecialty)specialityID);
+
+            return Ok(result);
+
+        }
+
 
         [HttpPut("schedule")]
         public async Task<IActionResult> EditSchedule(ScheduleSpecialityDoctorCreateViewModel scheduleSpecialityDoctorCreateViewModel)
@@ -140,6 +151,8 @@ namespace AGENDAMED.API.Controllers
             }
             return Ok(result);
         }
+
+
 
         #endregion
 

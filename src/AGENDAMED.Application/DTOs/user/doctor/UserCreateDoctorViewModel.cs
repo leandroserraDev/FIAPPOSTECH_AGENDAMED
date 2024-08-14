@@ -18,6 +18,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor
             Email = email;
             CRM = cRM; 
         }
+
         public string Nome { get; set; }
         public string SobreNome{ get; set; }
         public string Email{ get; set; }

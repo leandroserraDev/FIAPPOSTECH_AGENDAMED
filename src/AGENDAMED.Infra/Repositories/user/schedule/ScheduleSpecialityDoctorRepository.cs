@@ -3,6 +3,7 @@ using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
 using AGENDAMED.Infra.Context;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +23,32 @@ namespace AGENDAMED.Infra.Repositories.user.schedule
             _applicationContext = applicationContext;
         }
 
-        public Task<IList<ScheduleSpecialityDoctor>> GetSchedulesDoctor(string doctorID)
+        public async Task<IList<ScheduleSpecialityDoctor>> GetSchedulesDoctor(string doctorID)
         {
-            throw new NotImplementedException();
+            var schedule = await _applicationContext.ScheduleSpecialityDoctors
+               .Where(obj => obj.DoctorID.Equals(doctorID))
+               .Select(obj => new ScheduleSpecialityDoctor(obj.DoctorID, obj.SpecialityID)
+               {
+                   Schedule = obj.Schedule.Select(sc => new Schedule()
+                   {
+                       DoctorID = obj.DoctorID,
+                       Speciality = obj.SpecialityID,
+                       DayOfWeek = sc.DayOfWeek,
+                       ScheduleTime = sc.ScheduleTime.Select(sh => new ScheduleTime()
+                       {
+                           Time = sh.Time
+                       }).ToList()
+                   }).ToList()
+               }
+               ).ToListAsync();
+
+            return await Task.FromResult(schedule);
         }
 
         public async Task<ScheduleSpecialityDoctor> GetScheduleSpecialitieDoctor(Expression<Func<ScheduleSpecialityDoctor, bool>> expression)
         {
-            var schedule = await _applicationContext.ScheduleSpecialityDoctors
+            var schedule = _applicationContext.ScheduleSpecialityDoctors
+                .AsNoTracking()
                 .Where(expression)
                 .Select(obj => new ScheduleSpecialityDoctor(obj.DoctorID, obj.SpecialityID)
                 {
@@ -40,11 +59,15 @@ namespace AGENDAMED.Infra.Repositories.user.schedule
                         DayOfWeek = sc.DayOfWeek,
                         ScheduleTime = sc.ScheduleTime.Select(sh => new ScheduleTime()
                         {
+                            DoctorID = sh.DoctorID,
+                            Speciality = sh.Speciality,
+                            DayOfWeek = sh.DayOfWeek,
                             Time = sh.Time
                         }).ToList()
                     }).ToList()
                 }
-                ).FirstOrDefaultAsync();
+                ).FirstOrDefault();
+
 
             return await Task.FromResult(schedule);
         }

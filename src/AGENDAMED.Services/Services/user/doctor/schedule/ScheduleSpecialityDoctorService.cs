@@ -5,6 +5,7 @@ using AGENDAMED.Domain.Interface.Repositories.appointment;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user.doctor.schedule;
+using AGENDAMED.Domain.ValueObject;
 using LinqKit;
 using System;
 using System.Collections.Generic;
@@ -35,9 +36,12 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
             _scheduleRepository = scheduleRepository;
         }
 
-        public Task<IList<ScheduleSpecialityDoctor>> GetSchedulesDoctor(string doctorID)
+        public async Task<IList<ScheduleSpecialityDoctor>> GetSchedulesDoctor(string doctorID)
         {
-            throw new NotImplementedException();
+            var result = await _scheduleDoctorSpecialityRepository.GetSchedulesDoctor(doctorID);
+                            
+
+            return result;
         }
 
         public override async Task<ScheduleSpecialityDoctor> Create(ScheduleSpecialityDoctor entity)
@@ -49,8 +53,14 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
 
             if (result != null)
             {
-                await _notificationErrorService.AddNotification($"Já existe uma agenda para a especialidade: {(ESpecialty)entity.SpecialityID}");
-                return null;
+               var resultEdit = await Update(entity);
+                if(resultEdit == null) 
+                {
+                    await _notificationErrorService.AddNotification("Aconteceu um erro inesperado");
+                    return null; 
+                
+                };
+                return await Task.FromResult(resultEdit);
             }
             var resultCreate = await _scheduleDoctorSpecialityRepository.Create(entity);
             return resultCreate;
@@ -62,10 +72,11 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
                                                                                                        &&
                                                                                                        obj.SpecialityID.Equals(entity.SpecialityID));
             if (result != null) 
-            { 
+            {
                 var schedules = await _scheduleRepository.RemoveRange(result.Schedule);
-            }
 
+            }
+            result.Schedule = entity.Schedule;
 
             return await base.Update(entity);
         }
@@ -76,7 +87,7 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
 
             predicadeBuilder = predicadeBuilder.And(obj => obj.DoctorID.Equals(doctorID) && !obj.Deleted)
                                                .And(obj => obj.SpecialityID.Equals((long)speciality))
-                                               .And(obj => obj.Schedule.Select(sc => sc.DayOfWeek).Contains(dataAppointment.DayOfWeek));
+                                               .And(obj => obj.Schedule.Select(sc => sc.DayOfWeek).Contains((long)dataAppointment.DayOfWeek));
 
             var result = await _scheduleDoctorSpecialityRepository.GetScheduleSpecialitieDoctor(predicadeBuilder);
 
@@ -96,6 +107,19 @@ namespace AGENDAMED.Services.Services.user.doctor.schedule
             return result;
 
 
+        }
+
+        public async Task<ScheduleSpecialityDoctor> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality)
+        {
+            var predicadeBuilder = PredicateBuilder.New<ScheduleSpecialityDoctor>();
+
+            predicadeBuilder = predicadeBuilder.And(obj => obj.DoctorID.Equals(doctorID))
+                                               .And(obj => obj.SpecialityID.Equals((long)speciality));
+
+            var result = await _scheduleDoctorSpecialityRepository.GetScheduleSpecialitieDoctor(predicadeBuilder);
+
+
+            return result;
         }
     }
 }

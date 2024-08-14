@@ -12,5 +12,7 @@ namespace AGENDAMED.Domain.Interface.Services.user.doctor.schedule
     {
         Task<IList<ScheduleSpecialityDoctor>> GetSchedulesDoctor(string doctorID);
         Task<ScheduleSpecialityDoctor> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality, DateTime dataAppointment);
+        Task<ScheduleSpecialityDoctor> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality);
+
     }
 }

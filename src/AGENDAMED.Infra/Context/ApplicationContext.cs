@@ -2,6 +2,7 @@
 using AGENDAMED.Domain.Entities.user;
 using AGENDAMED.Domain.Entities.user.doctor;
 using AGENDAMED.Domain.Entities.user.doctor.schedule;
+using AGENDAMED.Infra.Maps.user.doctor.schedule;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,8 @@ namespace AGENDAMED.Infra.Context
         public DbSet<ScheduleSpecialityDoctor> ScheduleSpecialityDoctors { get; set; }
 
         public DbSet<Schedule> Schedules{ get; set; }
+        public DbSet<ScheduleTime> ScheduleTimes{ get; set; }
+
 
 
         public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default)

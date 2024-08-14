@@ -1,4 +1,5 @@
-﻿using AGENDAMED.Application.Interface.AppServices.user.doctor.schedule;
+﻿using AGENDAMED.Application.DTOs.user.doctor.schedule;
+using AGENDAMED.Application.Interface.AppServices.user.doctor.schedule;
 using AGENDAMED.Domain.Entities.user.doctor.schedule;
 using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Services.user.doctor.schedule;
@@ -19,25 +20,63 @@ namespace AGENDAMED.Application.AppServices.user.doctor.schedule
             _scheduleSpecialityDoctorService = scheduleSpecialityDoctorService;
         }
 
-        public async Task<ScheduleSpecialityDoctor> Create(ScheduleSpecialityDoctor specialityDoctor)
+        public async Task<ScheduleSpecialityViewModel> Create(ScheduleSpecialityDoctor specialityDoctor)
         {
-            return await _scheduleSpecialityDoctorService.Create(specialityDoctor);
+           var result = await _scheduleSpecialityDoctorService.Create(specialityDoctor);
+            if(result == null)
+            {
+                return null;
+            }
+
+            return new ScheduleSpecialityViewModel(result);
         }
 
-        public async Task<ScheduleSpecialityDoctor> Edit(ScheduleSpecialityDoctor specialityDoctor)
+        public async Task<ScheduleSpecialityViewModel> Edit(ScheduleSpecialityDoctor specialityDoctor)
         {
-            return await _scheduleSpecialityDoctorService.Update(specialityDoctor);
+            var result = await _scheduleSpecialityDoctorService.Update(specialityDoctor);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return new ScheduleSpecialityViewModel(result);
 
         }
 
-        public async Task<IList<ScheduleSpecialityDoctor>> GetSchedulesDoctor(string doctorID)
+        public async Task<IList<ScheduleSpecialityViewModel>> GetSchedulesDoctor(string doctorID)
         {
-            return await _scheduleSpecialityDoctorService.GetSchedulesDoctor(doctorID);
+            var result = await _scheduleSpecialityDoctorService.GetSchedulesDoctor(doctorID);
+
+            if(result == null)
+            {
+                return null;
+            }
+
+            var list = new List<ScheduleSpecialityViewModel>();
+            foreach (var item in result)
+            {
+                list.Add(new(item));
+            }
+
+            return list;
         }
 
         public async  Task<ScheduleSpecialityDoctor> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality, DateTime dataAppointment)
         {
            return await _scheduleSpecialityDoctorService.GetScheduleSpecialitieDoctor(doctorID, speciality, dataAppointment);
+        }
+
+        public  async Task<ScheduleSpecialityViewModel> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality)
+        {
+            var result = await _scheduleSpecialityDoctorService.GetScheduleSpecialitieDoctor(doctorID, speciality);
+
+
+            if (result == null)
+            {
+                return null;
+            }
+
+            return new ScheduleSpecialityViewModel(result);
         }
     }
 }

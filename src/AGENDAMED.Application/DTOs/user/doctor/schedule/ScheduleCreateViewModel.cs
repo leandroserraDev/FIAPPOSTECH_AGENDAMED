@@ -10,14 +10,14 @@ namespace AGENDAMED.Application.DTOs.user.doctor.schedule
 {
     public class ScheduleCreateViewModel
     {
-        public DayOfWeek DayOfWeek { get; set; }
-        public List<ScheduleHourCreateViewModel> ScheduleHour{ get; set; }
+        public long DayOfWeek { get; set; }
+        public List<ScheduleHourCreateViewModel> ScheduleTime{ get; set; }
 
         public Schedule ToDomain()
         {
             var newSchedule = new Schedule() { DayOfWeek = DayOfWeek};
 
-            ScheduleHour.ForEach(obj =>
+            ScheduleTime.ForEach(obj =>
             {
      
                 newSchedule.ScheduleTime.Add(obj.ToDomain());

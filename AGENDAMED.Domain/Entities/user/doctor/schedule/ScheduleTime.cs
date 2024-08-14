@@ -12,7 +12,7 @@ namespace AGENDAMED.Domain.Entities.user.doctor.schedule
     {
         public string DoctorID { get; set; }
         public long Speciality { get; set; }
-        public DayOfWeek DayOfWeek { get; set; }
+        public long DayOfWeek { get; set; }
         public TimeSpan Time { get; set; }
 
     }
