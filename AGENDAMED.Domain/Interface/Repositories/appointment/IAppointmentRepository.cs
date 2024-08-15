@@ -12,6 +12,12 @@ namespace AGENDAMED.Domain.Interface.Repositories.appointment
     {
         Task<List<Appointment>> GetPatientAppointments(Expression<Func<Appointment, bool>> expression);
         Task<List<Appointment>> GetDoctorAppointments(Expression<Func<Appointment, bool>> expression);
+        Task<Appointment> GetPatientApppointment(Expression<Func<Appointment, bool>> expression);
+        Task<Appointment> GetPatientApppointmentInclude(Expression<Func<Appointment, bool>> expression);
+        Task<List<Appointment>> GetAppointmentsOneHour();
+
+
+
 
 
     }

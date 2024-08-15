@@ -1,4 +1,9 @@
 using AGENDAMED.API.Configurations;
+using AGENDAMED.API.Controllers;
+using AGENDAMED.Domain.Interface.Services.notification;
+using AGENDAMED.Domain.Interface.Services.notificationAppointHangFire;
+using AGENDAMED.Services.Services.appointment;
+using Hangfire;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,9 +19,16 @@ builder.Services.ConfigureIdentity();
 builder.Services.ConfigureJWT();
 builder.Services.DepencyInjectionConfigure();
 builder.Services.ConfigureSwagger();
+builder.Services.HangFireConfiguration();
 builder.Services.AddCors(); 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
+
+app.UseHangfireDashboard("/dashboard");
+app.UseHangfireServer();
+
+
+RecurringJob.AddOrUpdate<INotificationAppointmentHangFireService>(obj  => obj.SendEmailDayBeforeAppointment(), Cron.Minutely);
 
 
 // Configure the HTTP request pipeline.

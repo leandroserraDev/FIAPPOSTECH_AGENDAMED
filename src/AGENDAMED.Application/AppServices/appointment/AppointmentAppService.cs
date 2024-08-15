@@ -20,7 +20,7 @@ namespace AGENDAMED.Application.AppServices.appointment
 
         public async Task<List<AppointmentViewModel>> GetAppointmentsUserLogged()
         {
-            var result = await _appointmentService.GetAppointmentsUserLogged();
+            var result = await _appointmentService.GetAppointmentsUserLoggedPatient();
 
             if (result == null) return null;
 

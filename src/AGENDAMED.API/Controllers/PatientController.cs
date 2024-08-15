@@ -40,6 +40,14 @@ namespace AGENDAMED.API.Controllers
             return await CustomResponse(appointments);
         }
 
+        [HttpGet("appointment/{id}")]
+        public async Task<IActionResult> GetMyAppointments(long id)
+        {
+            var appointments = await _appointmentService.GetPatientApppointment(id);
+
+            return await CustomResponse(appointments);
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser(string id)
         {
@@ -52,7 +60,7 @@ namespace AGENDAMED.API.Controllers
         [Authorize]
         public async Task<IActionResult> GetAppointmens()
         {
-            var appointments = await _appointmentService.GetAppointmentsUserLogged();
+            var appointments = await _appointmentService.GetAppointmentsUserLoggedPatient();
 
 
             return await CustomResponse(appointments);

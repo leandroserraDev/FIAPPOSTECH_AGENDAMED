@@ -13,10 +13,10 @@ namespace AGENDAMED.Application.DTOs.appointment
         public string PatientID { get; set; }
         public string DoctorID { get; set; }
         public DateTime DateAppointment { get; set; }
-        public ESpecialty ESpecialty { get; set; }
+        public long SpecialityID { get; set; }
         public Appointment ToDomain()
         {
-            var newAppointment = new Appointment(PatientID, DoctorID, (long)ESpecialty, DateAppointment);
+            var newAppointment = new Appointment(PatientID, DoctorID, SpecialityID, DateAppointment);
 
             return newAppointment;
         }

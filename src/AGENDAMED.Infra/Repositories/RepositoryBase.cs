@@ -49,7 +49,7 @@ namespace AGENDAMED.Infra.Repositories
         public async Task< TEntity >Update(TEntity entity)
         {
             _applicationContext.Set<TEntity>().Update(entity);
-            await _applicationContext.SaveChangesAsync();
+            var result = await _applicationContext.SaveChangesAsync();
 
             return await Task.FromResult(entity);
         }

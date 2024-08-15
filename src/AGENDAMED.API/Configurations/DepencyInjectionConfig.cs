@@ -20,6 +20,7 @@ using AGENDAMED.Domain.Interface.Services.appointment;
 using AGENDAMED.Domain.Interface.Services.calendar;
 using AGENDAMED.Domain.Interface.Services.loggedUser;
 using AGENDAMED.Domain.Interface.Services.notification;
+using AGENDAMED.Domain.Interface.Services.notificationAppointHangFire;
 using AGENDAMED.Domain.Interface.Services.speciality;
 using AGENDAMED.Domain.Interface.Services.user;
 using AGENDAMED.Domain.Interface.Services.user.auth;
@@ -34,6 +35,7 @@ using AGENDAMED.Services.Services.appointment;
 using AGENDAMED.Services.Services.calendar;
 using AGENDAMED.Services.Services.loggedUser;
 using AGENDAMED.Services.Services.notification;
+using AGENDAMED.Services.Services.notification.appointmentHangFire;
 using AGENDAMED.Services.Services.speciality;
 using AGENDAMED.Services.Services.user;
 using AGENDAMED.Services.Services.user.auth;
@@ -63,6 +65,7 @@ namespace AGENDAMED.API.Configurations
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<ILoggedUserService, LoggedUserService>();
             services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<INotificationAppointmentHangFireService, NotificationAppointmentHangFireService>();
 
             services.AddScoped(typeof(IAppServiceBase<>), typeof(AppServiceBase<>));
             services.AddScoped<IUserDoctorAppService, UserDoctorAppService>();

@@ -17,7 +17,7 @@ namespace AGENDAMED.Domain.ValueObject
             
         }
 
-        public long ID { get; private set; }
+        public long ID { get;  set; }
         public DateTime DtCreated{ get; private set; }
         public DateTime DtModified { get; private set; }
         public bool Deleted { get; private set; }

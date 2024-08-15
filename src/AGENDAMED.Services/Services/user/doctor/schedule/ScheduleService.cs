@@ -2,6 +2,7 @@
 using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Repositories.appointment;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
+using AGENDAMED.Domain.Interface.Services.notification;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,16 @@ namespace AGENDAMED.Domain.Interface.Services.user.doctor.schedule
     {
         private readonly IScheduleRepository _scheduleRepository;
         private readonly IAppointmentRepository _appointmentRepository;
+        private readonly INotificationErrorService _notificationErrorService;
 
-        public ScheduleService(IScheduleRepository scheduleRepository, IAppointmentRepository appointmentRepository)
+        public ScheduleService(IScheduleRepository scheduleRepository, IAppointmentRepository appointmentRepository, INotificationErrorService notificationErrorService)
         {
             _scheduleRepository = scheduleRepository;
             _appointmentRepository = appointmentRepository;
+            _notificationErrorService = notificationErrorService;
         }
 
-       
+
 
         public Task<IList<Schedule>> GetSchedulesDoctor(string doctorID)
         {
@@ -31,17 +34,27 @@ namespace AGENDAMED.Domain.Interface.Services.user.doctor.schedule
         {
             var scheduleDoctor = await _scheduleRepository.GetScheduleDoctor(doctorID, speciality, dateAppointment);
 
+            if(scheduleDoctor == null)
+            {
+                await _notificationErrorService.AddNotification("Não há horários");
+                return null;
+            }
+
             var appointmentsDoctorToDate = await _appointmentRepository.GetDoctorAppointments(obj => obj.DoctorID
                                                                                            .Equals(doctorID)
                                                                                            &&
-                                                                                           obj.Date.Equals(dateAppointment));
-            if (appointmentsDoctorToDate != null)
+                                                                                           !obj.Deleted
+                                                                                           &&
+                                                                                           obj.Date.DayOfYear.Equals(dateAppointment.DayOfYear));
+            if (appointmentsDoctorToDate != null && dateAppointment.DayOfYear <= DateTime.Now.DayOfYear)
             {
                 var getDateTimeSpan = TimeSpan.Parse(dateAppointment.ToString("hh:mm"));
 
                 appointmentsDoctorToDate.ForEach(appointment => {
-                var scheduleHourRemove = scheduleDoctor.ScheduleTime.FirstOrDefault(obj => obj.Time.ToString().Equals(
-                    string.Concat(appointment.Date.Hour.ToString(), ":" ,appointment.Date.Minute)));
+                var scheduleHourRemove = scheduleDoctor.ScheduleTime
+                    .FirstOrDefault(obj => obj.Time < DateTime.Now.TimeOfDay || obj.Time.ToString().Equals(
+                    string.Concat(appointment.Date.Hour.ToString(), ":" ,appointment.Date.Minute.ToString("00"), ":00") 
+                    ));
 
                     if (scheduleHourRemove != null) { scheduleDoctor.ScheduleTime.Remove(scheduleHourRemove); };
 

@@ -26,6 +26,17 @@ namespace AGENDAMED.Domain.Entities.appointment
             Date = date;
         }
 
+        public Appointment(string patientID, string doctorID, long specialityID, DateTime date,bool deleted)
+            :base(deleted)
+        {
+            PatientID = patientID;
+            DoctorID = doctorID;
+            SpecialityID = specialityID;
+            Date = date;
+        }
+
+
+
         public string PatientID { get; private set; }
 
         public virtual User Patient{ get;  set; }
@@ -36,5 +47,12 @@ namespace AGENDAMED.Domain.Entities.appointment
         public DateTime Date { get; private set; }
 
         protected Appointment() { }
+
+
+        public void AddDate(DateTime date)
+        {
+
+            Date = date;
+        }
     }
 }

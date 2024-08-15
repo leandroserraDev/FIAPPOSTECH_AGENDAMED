@@ -39,7 +39,8 @@ namespace AGENDAMED.Infra.Repositories.user.schedule
                    DayOfWeek = obj.DayOfWeek,
                    DoctorID = obj.DoctorID,
                    Speciality = obj.Speciality,
-                   ScheduleTime = obj.ScheduleTime.Select(st => new ScheduleTime(st.DoctorID, st.Speciality, st.DayOfWeek, st.Time)).ToList()
+                   ScheduleTime = obj.ScheduleTime
+                   .Select(st => new ScheduleTime(st.DoctorID, st.Speciality, st.DayOfWeek, st.Time)).ToList()
                })
                .FirstOrDefaultAsync();
 

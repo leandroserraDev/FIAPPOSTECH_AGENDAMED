@@ -10,10 +10,13 @@ using AGENDAMED.Domain.Entities.user;
 using AGENDAMED.Domain.Entities.user.doctor;
 using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
+using AGENDAMED.Domain.Interface.Services.appointment;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user;
 using AGENDAMED.Domain.Interface.Services.user.doctor.schedule;
 using AGENDAMED.Infra.Context;
+using Hangfire;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -35,11 +38,12 @@ namespace AGENDAMED.API.Controllers
         private readonly IDoctorSpecialityAppService _doctorSpecialityAppService;
         private readonly INotificationErrorService _notificationErrorService;
         private readonly IScheduleService _scheduleService;
+        private readonly IAppointmentService _appointmentService;
         public DoctorController(IUserDoctorAppService userDoctorAppService,
 
             IDoctorSpecialityAppService doctorSpecialityAppService,
-            INotificationErrorService notificationErrorService, IScheduleSpecialityDoctorAppService scheduleSpecialityDoctorAppService, 
-            IScheduleService scheduleService)
+            INotificationErrorService notificationErrorService, IScheduleSpecialityDoctorAppService scheduleSpecialityDoctorAppService,
+            IScheduleService scheduleService, IAppointmentService appointmentService)
 
             : base(notificationErrorService)
         {
@@ -48,6 +52,7 @@ namespace AGENDAMED.API.Controllers
             _notificationErrorService = notificationErrorService;
             _scheduleSpecialityDoctorAppService = scheduleSpecialityDoctorAppService;
             _scheduleService = scheduleService;
+            _appointmentService = appointmentService;
         }
 
         [HttpGet]
@@ -186,6 +191,7 @@ namespace AGENDAMED.API.Controllers
         }
 
 
+
         [HttpPost("speciality")]
         public async Task<IActionResult> CreateSpeciality(DoctorSpecialityCreateViewModel createViewModel)
         {
@@ -213,5 +219,17 @@ namespace AGENDAMED.API.Controllers
         }
 
         #endregion
+
+
+        [HttpGet("appointments")]
+        [Authorize]
+        public async Task<IActionResult> GetAppointmens()
+        {
+            var appointments = await _appointmentService.GetAppointmentsUserLoggedDoctor();
+
+
+
+            return await CustomResponse(appointments);
+        }
     }
 }

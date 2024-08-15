@@ -1,7 +1,10 @@
 ﻿using AGENDAMED.Application.DTOs.appointment;
 using AGENDAMED.Domain.Entities.appointment;
 using AGENDAMED.Domain.Interface.Services.appointment;
+using AGENDAMED.Domain.Interface.Services.notification;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AGENDAMED.API.Controllers
@@ -11,14 +14,18 @@ namespace AGENDAMED.API.Controllers
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
-    public class AppointmentController : ControllerBase
+    [Authorize]
+    public class AppointmentController : MainController
     {
 
         private readonly IAppointmentService _appointmentService;
+        private readonly INotificationErrorService _notificationErrorService;
 
-        public AppointmentController(IAppointmentService appointmentService)
+        public AppointmentController(IAppointmentService appointmentService, INotificationErrorService notificationErrorService)
+            :base(notificationErrorService)
         {
             _appointmentService = appointmentService;
+            _notificationErrorService = notificationErrorService;
         }
 
         /// <summary>
@@ -38,18 +45,30 @@ namespace AGENDAMED.API.Controllers
         /// <param name="appointment"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> List(AppointmentCreateViewModel appointment)
+        public async Task<IActionResult> Create(AppointmentCreateViewModel appointment)
         {
+
             var result = await _appointmentService.Create(appointment.ToDomain());
 
-            return Ok(result);
+            return await CustomResponse(result);
+        }
+
+        [HttpPut("{id}/reagendar")]
+        public async Task<IActionResult> Reagendar(long id, AppointmentCreateViewModel appointment)
+        {
+
+            var result = await _appointmentService.Reagendar(id,appointment.ToDomain());
+
+            return await CustomResponse(result);
         }
 
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> CancelAppointment(int id)
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> CancelAppointment(long id)
         {
-            return Ok();
+            var result = await _appointmentService.CancelAppointment(id);
+
+            return await CustomResponse(result);
         }
 
     }
