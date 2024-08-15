@@ -18,6 +18,8 @@ namespace AGENDAMED.Application.Interface.AppServices.user.doctor.schedule
         
         Task<ScheduleSpecialityDoctor> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality, DateTime dataAppointment);
         Task<ScheduleSpecialityViewModel> GetScheduleSpecialitieDoctor(string doctorID, ESpecialty speciality);
+        
+
 
     }
 }

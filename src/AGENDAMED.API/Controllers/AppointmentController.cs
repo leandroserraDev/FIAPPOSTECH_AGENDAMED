@@ -45,6 +45,7 @@ namespace AGENDAMED.API.Controllers
             return Ok(result);
         }
 
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> CancelAppointment(int id)
         {

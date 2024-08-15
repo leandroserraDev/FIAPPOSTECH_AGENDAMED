@@ -10,15 +10,20 @@ using System.Threading.Tasks;
 
 namespace AGENDAMED.Application.DTOs.user.patient
 {
-    public class UserEditPatientViewModel
+    public class UserCreatePatientViewModel : UserCreateViewModel
     {
+        public UserCreatePatientViewModel(string nome,string sobrenome, string email, string password) : base(nome, sobrenome, email, password, ERoles.Patient)
+        {
+        }
 
 
-        public  User ToDomain()
+        public override User ToDomain()
         {
             var newUser = new User();
             newUser.Name = Nome;
             newUser.LastName = Nome;
+            newUser.UserName = Email;
+
             newUser.Email = Email;
             var patient = new Patient();
 
@@ -26,11 +31,5 @@ namespace AGENDAMED.Application.DTOs.user.patient
                 
             return newUser;
         }
-
-        public string Nome { get; set; }
-        public string Sobrenome { get; set; }
-        public string Email { get; set; }
-
-
     }
 }

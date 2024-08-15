@@ -22,6 +22,26 @@ namespace AGENDAMED.Infra.Repositories.user
             _applicationContext = applicationContext;
         }
 
+        public async Task<List<User>> GetActiveBySpecialityID(long specialityID)
+        {
+            var result = await _applicationContext.Users
+                .Where(obj => obj.Doctor != null && !obj.Doctor.Deleted)
+                .Select(obj => new User
+                {
+                    Id = obj.Id,
+                    Name = obj.Name,
+                    LastName = obj.LastName,
+                    Email = obj.Email,
+                    Doctor = new Doctor()
+                    {
+                        CRM = obj.Doctor.CRM,
+                        Specialities = obj.Doctor.Specialities.Select(sp => new DoctorSpecialities() { Speciality = sp.Speciality }).ToList()
+                    }
+                }).ToListAsync();
+
+            return result;
+        }
+
         public override async Task<IList<User>> GetAll()
         {
             var result = await _applicationContext.Users
@@ -40,12 +60,13 @@ namespace AGENDAMED.Infra.Repositories.user
             return result;
         }
 
-        public async Task<User> GetUserDoctor(string id)
+        public async Task<User> GetUserById(string id)
         {
-            var result = await _applicationContext.Users.Where(obj => obj.Id.Equals(id) && obj.Doctor != null)
+            var result = await _applicationContext.Users.Where(obj => obj.Id.Equals(id))
                 .AsNoTracking()
                 .Include(obj => obj.Doctor)
                 .ThenInclude(obj => obj.Specialities)
+                .Include(obj =>  obj.Patient)
                 .FirstOrDefaultAsync();
 
             return await Task.FromResult(result);

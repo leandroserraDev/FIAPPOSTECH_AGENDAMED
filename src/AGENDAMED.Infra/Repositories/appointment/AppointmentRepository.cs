@@ -30,7 +30,16 @@ namespace AGENDAMED.Infra.Repositories.appointment
 
         public async Task<List<Appointment>> GetPatientAppointments(Expression<Func<Appointment, bool>> expression)
         {
-            var result = await _applicationContext.Appointments.Where(expression).ToListAsync();
+            var result = await _applicationContext.Appointments.Where(expression)
+                .Select(obj => new Appointment(obj.PatientID, obj.DoctorID, obj.SpecialityID, obj.Date)
+                {
+                    Doctor = new Domain.Entities.user.User() {Id =obj.Doctor.Id,Name = obj.Doctor.Name, LastName = obj.Doctor.LastName, Email = obj.Doctor.Email }
+                    ,
+                    Patient = new Domain.Entities.user.User() { Id = obj.Doctor.Id, Name = obj.Doctor.Name, LastName = obj.Doctor.LastName, Email = obj.Doctor.Email }
+                    ,
+                    Speciality = new Domain.Entities.speciality.Speciality() { Name = obj.Speciality.Name, Description = obj.Speciality.Description}
+                })
+                .ToListAsync();
 
             return await Task.FromResult(result);
         }

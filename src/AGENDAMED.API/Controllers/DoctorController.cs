@@ -12,6 +12,7 @@ using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user;
+using AGENDAMED.Domain.Interface.Services.user.doctor.schedule;
 using AGENDAMED.Infra.Context;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -26,25 +27,27 @@ namespace AGENDAMED.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class DoctorController : ControllerBase
+    public class DoctorController : MainController
     {
 
         private readonly IUserDoctorAppService _userDoctorAppService;
-        private readonly IScheduleRepository _scheduleRepository;
         private readonly IScheduleSpecialityDoctorAppService _scheduleSpecialityDoctorAppService;
         private readonly IDoctorSpecialityAppService _doctorSpecialityAppService;
         private readonly INotificationErrorService _notificationErrorService;
+        private readonly IScheduleService _scheduleService;
+        public DoctorController(IUserDoctorAppService userDoctorAppService,
 
-        public DoctorController(IUserDoctorAppService userDoctorAppService, 
-            IScheduleRepository scheduleRepository, 
-            IDoctorSpecialityAppService doctorSpecialityAppService, 
-            INotificationErrorService notificationErrorService, IScheduleSpecialityDoctorAppService scheduleSpecialityDoctorAppService)
+            IDoctorSpecialityAppService doctorSpecialityAppService,
+            INotificationErrorService notificationErrorService, IScheduleSpecialityDoctorAppService scheduleSpecialityDoctorAppService, 
+            IScheduleService scheduleService)
+
+            : base(notificationErrorService)
         {
             _userDoctorAppService = userDoctorAppService;
-            _scheduleRepository = scheduleRepository;
             _doctorSpecialityAppService = doctorSpecialityAppService;
             _notificationErrorService = notificationErrorService;
             _scheduleSpecialityDoctorAppService = scheduleSpecialityDoctorAppService;
+            _scheduleService = scheduleService;
         }
 
         [HttpGet]
@@ -138,6 +141,14 @@ namespace AGENDAMED.API.Controllers
             return Ok(result);
 
         }
+        [HttpGet("speciality/{id}")]
+        public async Task<IActionResult> GetDoctorBySpeciality(long id)
+        {
+            var resullt = await _userDoctorAppService.GetActiveBySpecialityID(id);
+
+            return await CustomResponse(resullt);
+        }
+        
 
 
         [HttpPut("schedule")]
@@ -166,7 +177,13 @@ namespace AGENDAMED.API.Controllers
             return Ok(new {data= result });
         }
 
+        [HttpGet("scheduleTime")]
+        public async Task<IActionResult> GetScheduleTime(string doctorID, long specialityID, DateTime data)
+        {
+            var result = await _scheduleService.GetScheduleDoctor(doctorID, (ESpecialty)specialityID, data);
 
+            return await CustomResponse(result);
+        }
 
 
         [HttpPost("speciality")]

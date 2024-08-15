@@ -1,12 +1,15 @@
 ﻿using AGENDAMED.Domain.Entities.user;
 using AGENDAMED.Domain.Entities.user.doctor;
+using AGENDAMED.Domain.Entities.user.patient;
+using AGENDAMED.Domain.Enums;
 using AGENDAMED.Domain.Interface.Repositories.speciality;
 using AGENDAMED.Domain.Interface.Repositories.user;
 using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
+using AGENDAMED.Domain.Interface.Services.email.doctor.email;
+using AGENDAMED.Domain.Interface.Services.loggedUser;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user;
 using AGENDAMED.Domain.ValueObject;
-using AGENDAMED.Services.Services.email.doctor;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -26,13 +29,15 @@ namespace AGENDAMED.Services.Services.user
         private readonly INotificationErrorService _notificationErrorService;
         private readonly IDoctorSpecialityRepository _doctorSpecialityRepository;
         private readonly IConfiguration _configuration;
+        private readonly ILoggedUserService _loggedUserService;
         private readonly UserManager<User> _userManager;
 
         public UserService(IUserRepository userRepository,
                            UserManager<User> userManager,
                            INotificationErrorService notificationErrorService,
                            IDoctorSpecialityRepository doctorSpecialityRepository,
-                           IConfiguration configuration)
+                           IConfiguration configuration,
+                           ILoggedUserService loggedUserService)
             : base(userRepository)
         {
             _userRepository = userRepository;
@@ -40,6 +45,7 @@ namespace AGENDAMED.Services.Services.user
             _notificationErrorService = notificationErrorService;
             _doctorSpecialityRepository = doctorSpecialityRepository;
             _configuration = configuration;
+            _loggedUserService = loggedUserService;
         }
 
         public async Task<List<User>> GetUsersDoctor()
@@ -95,15 +101,48 @@ namespace AGENDAMED.Services.Services.user
                 return null;
             }
 
+            user.Patient = new Patient();
 
-            await _userManager.CreateAsync(user);
+           var result =  await _userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+            {
+                result.Errors.ToList().ForEach(obj =>
+                {
+                    _notificationErrorService.AddNotification(obj.Description);
+
+                });
+                return null;
+            }
+            await _userManager.AddToRoleAsync(user, ERoles.Patient.ToString());
 
             return await Task.FromResult(user);
         }
 
-        public Task<User> UpdatePatient(User user)
+        public async  Task<User> UpdatePatient(User user)
         {
-            throw new NotImplementedException();
+           var userBD = await _userManager.FindByEmailAsync(user.Email);
+            if (userBD == null)
+            {
+                await _notificationErrorService.AddNotification("Usuário não encontrado");
+                return null;
+
+            }
+
+            if (!userBD.Id.Equals(_loggedUserService.LoggedUser().Result.Id))
+            {
+                await _notificationErrorService.AddNotification("Não permitido");
+                return null;
+
+            }
+            var result = await _userRepository.Update(userBD);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return await Task.FromResult(user);
+
+
         }
 
         public Task<User> DeletePatient(User user)
@@ -121,7 +160,7 @@ namespace AGENDAMED.Services.Services.user
             {
                 //TO DO
                 // Validar se usuário já está cadastrado como Doutor no sistema
-                var isDoctor = await _userRepository.GetUserDoctor(userBD.Id);
+                var isDoctor = await _userRepository.GetUserDoctorById(userBD.Id);
                 if(isDoctor != null)
                 {
 
@@ -149,7 +188,7 @@ namespace AGENDAMED.Services.Services.user
 
         public async Task<User> UpdateDoctor(string id,User user)
         {
-            var userBD = await _userRepository.GetUserDoctor(id);
+            var userBD = await _userRepository.GetUserDoctorById(id);
 
             if(userBD == null)
             {
@@ -187,14 +226,16 @@ namespace AGENDAMED.Services.Services.user
 
         public async Task<User> GetDoctorById(string id)
         {
-            var result = await _userRepository.GetUserDoctor(id);
+            var result = await _userRepository.GetUserDoctorById(id);
 
             return await Task.FromResult(result);
         }
 
-        public Task<User> GetPatientById(string id)
+        public async Task<User> GetPatientById(string id)
         {
-            throw new NotImplementedException();
+            var result = await _userRepository.GetUserById(id);
+
+            return await Task.FromResult(result);
         }
 
         private string GeneratePassword()
@@ -217,6 +258,11 @@ namespace AGENDAMED.Services.Services.user
         {
             var result = await _userRepository.GetUserDoctorById(doctorID);
             return await Task.FromResult(result);
+        }
+
+        public async Task<List<User>> GetActiveBySpecialityID(long specialityID)
+        {
+            return await _userRepository.GetActiveBySpecialityID(specialityID);
         }
     }
 }

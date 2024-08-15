@@ -14,6 +14,7 @@ namespace AGENDAMED.Application.Interface.AppServices.user.doctor
         Task<DoctorViewModel> CreateDoctor(UserCreateDoctorViewModel userCreateDoctorViewModel);
         Task<DoctorViewModel> EditDoctor(string id,UserEditDoctorViewModel userEditDoctorViewModel);
         Task<DoctorViewModel> GetDoctorById(string doctorID);
+        Task<List<DoctorViewModel>> GetActiveBySpecialityID(long specialityID);
 
 
         Task<IList<DoctorViewModel>> GetDoctors();

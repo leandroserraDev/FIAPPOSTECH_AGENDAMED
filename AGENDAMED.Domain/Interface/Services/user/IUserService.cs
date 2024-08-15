@@ -19,6 +19,7 @@ namespace AGENDAMED.Domain.Interface.Services.user
         Task<User> GetUserDoctorById(string doctorID); 
         Task<User> GetDoctorById(string id);
         Task<User> GetPatientById(string id);
+        Task<List<User>> GetActiveBySpecialityID(long specialityID);
 
         Task<List<User>> GetUsersPatients();
 

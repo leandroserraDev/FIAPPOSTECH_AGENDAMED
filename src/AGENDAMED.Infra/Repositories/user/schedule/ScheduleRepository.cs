@@ -26,6 +26,27 @@ namespace AGENDAMED.Infra.Repositories.user.schedule
             throw new NotImplementedException();
         }
 
+        public async Task<Schedule> GetScheduleDoctor(string doctorID, ESpecialty speciality, DateTime dateAppointment)
+        {
+            var result = await _applicationContext.Schedules.Where(obj => obj.DoctorID.Equals(doctorID)
+           &&
+           obj.Speciality.Equals((long)speciality)
+           &&
+           obj.DayOfWeek.Equals((long)dateAppointment.DayOfWeek)
+           )
+               .Select(obj => new Schedule()
+               {
+                   DayOfWeek = obj.DayOfWeek,
+                   DoctorID = obj.DoctorID,
+                   Speciality = obj.Speciality,
+                   ScheduleTime = obj.ScheduleTime.Select(st => new ScheduleTime(st.DoctorID, st.Speciality, st.DayOfWeek, st.Time)).ToList()
+               })
+               .FirstOrDefaultAsync();
+
+
+            return result;
+        }
+
         public async Task<IList<Schedule>> GetSchedulesDoctor(string doctorID)
         {
             var result = await _applicationContext.Schedules.Where(obj => obj.DoctorID.Equals(doctorID))

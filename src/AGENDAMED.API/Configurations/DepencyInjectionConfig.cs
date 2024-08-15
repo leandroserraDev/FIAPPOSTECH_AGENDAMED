@@ -3,11 +3,13 @@ using AGENDAMED.Application.AppServices.user.auth;
 using AGENDAMED.Application.AppServices.user.doctor;
 using AGENDAMED.Application.AppServices.user.doctor.schedule;
 using AGENDAMED.Application.AppServices.user.doctor.specialy;
+using AGENDAMED.Application.AppServices.user.patient;
 using AGENDAMED.Application.Interface.AppServices;
 using AGENDAMED.Application.Interface.AppServices.speciality;
 using AGENDAMED.Application.Interface.AppServices.user.auth;
 using AGENDAMED.Application.Interface.AppServices.user.doctor;
 using AGENDAMED.Application.Interface.AppServices.user.doctor.schedule;
+using AGENDAMED.Application.Interface.AppServices.user.patient;
 using AGENDAMED.Domain.Interface.Repositories;
 using AGENDAMED.Domain.Interface.Repositories.appointment;
 using AGENDAMED.Domain.Interface.Repositories.speciality;
@@ -16,6 +18,7 @@ using AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule;
 using AGENDAMED.Domain.Interface.Services;
 using AGENDAMED.Domain.Interface.Services.appointment;
 using AGENDAMED.Domain.Interface.Services.calendar;
+using AGENDAMED.Domain.Interface.Services.loggedUser;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.speciality;
 using AGENDAMED.Domain.Interface.Services.user;
@@ -29,6 +32,7 @@ using AGENDAMED.Infra.Repositories.user.schedule;
 using AGENDAMED.Services.Services;
 using AGENDAMED.Services.Services.appointment;
 using AGENDAMED.Services.Services.calendar;
+using AGENDAMED.Services.Services.loggedUser;
 using AGENDAMED.Services.Services.notification;
 using AGENDAMED.Services.Services.speciality;
 using AGENDAMED.Services.Services.user;
@@ -57,13 +61,17 @@ namespace AGENDAMED.API.Configurations
             services.AddScoped<IScheduleSpecialityDoctorService, ScheduleSpecialityDoctorService>();
             services.AddScoped<IDoctorSpecialityService, DoctorSpecialityService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<ILoggedUserService, LoggedUserService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
 
             services.AddScoped(typeof(IAppServiceBase<>), typeof(AppServiceBase<>));
             services.AddScoped<IUserDoctorAppService, UserDoctorAppService>();
             services.AddScoped<IDoctorSpecialityAppService, DoctorSpecialityAppService>();
             services.AddScoped<IScheduleSpecialityDoctorAppService, ScheduleSpecialityDoctorAppService>();
             services.AddScoped<IAuthenticationAppService, AuthenticationAppService>();
+            services.AddScoped<IUserPatientAppService, UserPatientAppService>();
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             return services;
         }
     }

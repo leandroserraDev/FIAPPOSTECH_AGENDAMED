@@ -15,6 +15,8 @@ namespace AGENDAMED.Domain.Interface.Repositories.user.doctor.schedule
         Task<IList<Schedule>> GetScheduleByExpression(Expression<Func<Schedule, bool>> expression);
         Task<bool> RemoveRange(List<Schedule> schedules);
         Task<IList<Schedule>> GetSchedulesDoctor(string doctorID, ESpecialty speciality, DateTime dateAppointment);
+        Task<Schedule> GetScheduleDoctor(string doctorID, ESpecialty speciality, DateTime dateAppointment);
+
 
     }
 }

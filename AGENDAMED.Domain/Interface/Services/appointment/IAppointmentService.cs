@@ -11,6 +11,8 @@ namespace AGENDAMED.Domain.Interface.Services.appointment
     public interface IAppointmentService : IServiceBase<Appointment>
     {
         Task<List<Appointment>> GetPatientAppointments(string patientID);
+        Task<List<Appointment>> GetAppointmentsUserLogged();
+
         Task<List<Appointment>> GetDoctorAppointments(Expression<Func<Appointment, bool>> expression);
 
 

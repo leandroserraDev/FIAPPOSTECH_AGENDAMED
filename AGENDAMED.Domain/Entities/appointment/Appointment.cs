@@ -25,13 +25,14 @@ namespace AGENDAMED.Domain.Entities.appointment
             SpecialityID = specialityID;
             Date = date;
         }
+
         public string PatientID { get; private set; }
 
-        public virtual Patient Patient{ get; private set; }
+        public virtual User Patient{ get;  set; }
         public string DoctorID { get; private set; }
-        public virtual Doctor Doctor{ get; private set; } 
+        public virtual User Doctor{ get;  set; } 
         public long SpecialityID { get; private set; }
-        public virtual Speciality Speciality{ get; private set; }
+        public virtual Speciality Speciality{ get;  set; }
         public DateTime Date { get; private set; }
 
         protected Appointment() { }

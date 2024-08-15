@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-namespace AGENDAMED.Services.Services.email.emailBase
+namespace AGENDAMED.Domain.Interface.Services.email.emailBase
 {
     public abstract class EmailBase : IEmailBase
     {
@@ -18,10 +18,10 @@ namespace AGENDAMED.Services.Services.email.emailBase
         protected EmailBase( string sendTO, string message, string subject, IConfiguration configuration)
         {
             _configuration = configuration;
-            var host = _configuration["ConfigurationMAILTrap:Host"];
-            var port = _configuration["ConfigurationMAILTrap:Port"];
-            var userName = _configuration["ConfigurationMAILTrap:UserName"];
-            var password = _configuration["ConfigurationMAILTrap:Password"];
+            var host = _configuration?["ConfigurationMAILTrap:Host"];
+            var port = _configuration?["ConfigurationMAILTrap:Port"];
+            var userName = _configuration?["ConfigurationMAILTrap:UserName"];
+            var password = _configuration?["ConfigurationMAILTrap:Password"];
 
 
 

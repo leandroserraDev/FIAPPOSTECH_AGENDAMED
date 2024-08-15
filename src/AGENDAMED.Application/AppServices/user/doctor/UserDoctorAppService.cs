@@ -41,6 +41,22 @@ namespace AGENDAMED.Application.AppServices.user.doctor
 
         }
 
+        public async  Task<List<DoctorViewModel>> GetActiveBySpecialityID(long specialityID)
+        {
+            var result = await _userService.GetActiveBySpecialityID(specialityID);
+            if(result == null) { return null; }
+
+
+             var list = new List<DoctorViewModel>();
+             
+             foreach(var doctor in result)
+            {
+                list.Add(new(doctor));
+            }
+
+            return list;
+        }
+
         public async Task<DoctorViewModel> GetDoctorById(string doctorID)
         {
             var result = await _userService.GetUserDoctorById(doctorID);

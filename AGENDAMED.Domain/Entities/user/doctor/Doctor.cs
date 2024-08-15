@@ -12,7 +12,7 @@ namespace AGENDAMED.Domain.Entities.user.doctor
     {
 
         public string UserID { get;  set; }
-        //public virtual User User{ get;  set; }
+        public virtual User User{ get;  set; }
         public string CRM { get;  set; }
 
         public IList<DoctorSpecialities>Specialities { get; set; }

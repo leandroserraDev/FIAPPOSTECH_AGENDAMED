@@ -21,11 +21,36 @@ namespace AGENDAMED.Domain.Interface.Services.user.doctor.schedule
             _appointmentRepository = appointmentRepository;
         }
 
+       
+
         public Task<IList<Schedule>> GetSchedulesDoctor(string doctorID)
         {
             throw new NotImplementedException();
         }
+        public async Task<Schedule> GetScheduleDoctor(string doctorID, ESpecialty speciality, DateTime dateAppointment)
+        {
+            var scheduleDoctor = await _scheduleRepository.GetScheduleDoctor(doctorID, speciality, dateAppointment);
 
+            var appointmentsDoctorToDate = await _appointmentRepository.GetDoctorAppointments(obj => obj.DoctorID
+                                                                                           .Equals(doctorID)
+                                                                                           &&
+                                                                                           obj.Date.Equals(dateAppointment));
+            if (appointmentsDoctorToDate != null)
+            {
+                var getDateTimeSpan = TimeSpan.Parse(dateAppointment.ToString("hh:mm"));
+
+                appointmentsDoctorToDate.ForEach(appointment => {
+                var scheduleHourRemove = scheduleDoctor.ScheduleTime.FirstOrDefault(obj => obj.Time.ToString().Equals(
+                    string.Concat(appointment.Date.Hour.ToString(), ":" ,appointment.Date.Minute)));
+
+                    if (scheduleHourRemove != null) { scheduleDoctor.ScheduleTime.Remove(scheduleHourRemove); };
+
+            });
+            }
+
+            return scheduleDoctor;
+
+        }
         public async Task<IList<Schedule>> GetSchedulesDoctor(string doctorID, ESpecialty speciality, DateTime dateAppointment)
         {
            var scheduleDoctor =  await _scheduleRepository.GetSchedulesDoctor(doctorID, speciality, dateAppointment);
