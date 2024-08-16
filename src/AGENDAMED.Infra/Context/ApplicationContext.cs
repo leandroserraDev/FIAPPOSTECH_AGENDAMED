@@ -1,4 +1,5 @@
 ﻿using AGENDAMED.Domain.Entities.appointment;
+using AGENDAMED.Domain.Entities.speciality;
 using AGENDAMED.Domain.Entities.user;
 using AGENDAMED.Domain.Entities.user.doctor;
 using AGENDAMED.Domain.Entities.user.doctor.schedule;
@@ -74,9 +75,48 @@ namespace AGENDAMED.Infra.Context
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          
+            var ADMIN_ID = Guid.NewGuid();
+
 
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            var appUser = new User
+            {
+                Id = ADMIN_ID.ToString(),
+                Email = "administrador@administrador.com",
+                EmailConfirmed = true,
+                UserName = "administrador@administrador.com",
+                Name = "administrador@administrador.com",
+                LastName = "administrador@administrador.com",
+                NormalizedEmail = "ADMINISTRADOR@ADMINISTRADOR.COM",
+                NormalizedUserName = "ADMINISTRADOR@ADMINISTRADOR.COM"
+            };
+
+
+            
+
+            //set user password
+            PasswordHasher<User> ph = new PasswordHasher<User>();
+            appUser.PasswordHash = ph.HashPassword(appUser, "Admin123*#");
+
+            //seed user
+            modelBuilder.Entity<User>().HasData(appUser);
+
+
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = "1",
+                UserId = ADMIN_ID.ToString(),
+            });
+
+            var speciality = new List<Speciality>();
+
+            speciality.Add(new() { ID = 1, Name = "Clínico Geral", Description = "CLÍNICO GERAL" });
+            speciality.Add(new() { ID = 2, Name = "Ortopedista", Description = "ORTOPEDISTA" });
+            speciality.Add(new() { ID = 3, Name = "Pediatra", Description = "PEDIATRA" });
+
+            modelBuilder.Entity<Speciality>().HasData(speciality);
+
 
             base.OnModelCreating(modelBuilder);
 

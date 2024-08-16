@@ -1,4 +1,5 @@
 ﻿using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using System.Runtime.CompilerServices;
 
@@ -11,15 +12,28 @@ namespace AGENDAMED.API.Configurations
 
             services.AddHangfire(x =>
             {
+
                 var builder = new ConfigurationBuilder()
                              .AddJsonFile("appsettings.json")
                              .Build();
-                        x.UsePostgreSqlStorage(builder.GetConnectionString("Connection"));
+                x.UsePostgreSqlStorage(builder.GetConnectionString("Connection"));
 
-            });
+            }
+            );
 
 
             return services;
     }
+     
+
     }
+    public class AllowAllConnectionsFilter : IDashboardAuthorizationFilter
+    {
+        public bool Authorize(DashboardContext context)
+        {
+            // Allow outside. You need an authentication scenario for this part.
+            // DON'T GO PRODUCTION WITH THIS LINES.
+            return true;
+        }
+    };
 }

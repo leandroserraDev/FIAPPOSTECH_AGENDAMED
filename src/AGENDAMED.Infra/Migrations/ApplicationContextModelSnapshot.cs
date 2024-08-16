@@ -133,6 +133,35 @@ namespace AGENDAMED.Infra.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Speciality");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1L,
+                            Deleted = false,
+                            Description = "CLÍNICO GERAL",
+                            DtCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DtModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Clínico Geral"
+                        },
+                        new
+                        {
+                            ID = 2L,
+                            Deleted = false,
+                            Description = "ORTOPEDISTA",
+                            DtCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DtModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Ortopedista"
+                        },
+                        new
+                        {
+                            ID = 3L,
+                            Deleted = false,
+                            Description = "PEDIATRA",
+                            DtCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            DtModified = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Pediatra"
+                        });
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.Doctor", b =>
@@ -330,6 +359,26 @@ namespace AGENDAMED.Infra.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "f1f3e99f-9814-46ad-aead-3b5e4aaad646",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "af8df446-c141-49bd-bc2b-d6dcb3e94429",
+                            Email = "administrador@administrador.com",
+                            EmailConfirmed = true,
+                            LastName = "administrador@administrador.com",
+                            LockoutEnabled = false,
+                            Name = "administrador@administrador.com",
+                            NormalizedEmail = "ADMINISTRADOR@ADMINISTRADOR.COM",
+                            NormalizedUserName = "ADMINISTRADOR@ADMINISTRADOR.COM",
+                            PasswordHash = "AQAAAAEAACcQAAAAELB3uV+nKROoADNampaDfd/otIm0sGXcg3lY87ztipzRWnf9gnjz++wtlGB2nQDPRg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "0c64c1b5-05aa-460e-b273-286c9984533f",
+                            TwoFactorEnabled = false,
+                            UserName = "administrador@administrador.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -443,6 +492,13 @@ namespace AGENDAMED.Infra.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "f1f3e99f-9814-46ad-aead-3b5e4aaad646",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>

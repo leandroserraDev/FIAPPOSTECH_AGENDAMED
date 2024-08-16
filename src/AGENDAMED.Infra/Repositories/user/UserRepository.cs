@@ -60,6 +60,35 @@ namespace AGENDAMED.Infra.Repositories.user
             return result;
         }
 
+        public async Task<User> GetUserByEmail(string email)
+        {
+            var result = await _applicationContext.Users
+              .Where(obj => obj.Email.Equals(email))
+              .Select(obj => new User
+              {
+                  Id = obj.Id,
+                  Name = obj.Name,
+                  LastName = obj.LastName,
+                  UserName = obj.UserName,
+                  Email = obj.Email,
+                  Doctor = new Doctor()
+                  {
+                      CRM = obj.Doctor.CRM,
+                      Specialities = obj.Doctor.Specialities.Select(sp => new DoctorSpecialities()
+                      {
+                          Speciality = new Speciality()
+                          {
+                              Name = sp.Speciality.Name,
+                              Description = sp.Speciality.Description
+
+                          }
+                      }).ToList()
+                  }
+              }).FirstOrDefaultAsync();
+
+            return await Task.FromResult(result);
+        }
+
         public async Task<User> GetUserById(string id)
         {
             var result = await _applicationContext.Users.Where(obj => obj.Id.Equals(id))

@@ -1,4 +1,5 @@
 ﻿using AGENDAMED.Domain.Entities.user;
+using AGENDAMED.Domain.Interface.Repositories.user;
 using AGENDAMED.Domain.Interface.Services.notification;
 using AGENDAMED.Domain.Interface.Services.user.auth;
 using Microsoft.AspNetCore.Identity;
@@ -13,12 +14,14 @@ namespace AGENDAMED.Services.Services.user.auth
     public class AuthenticationService : IAuthenticationService
     {
         private readonly UserManager<User> _userManager;
+        private readonly IUserRepository _userRepository;
         private INotificationErrorService _notificationErrorService;
 
-        public AuthenticationService(UserManager<User> userManager, INotificationErrorService notificationErrorService)
+        public AuthenticationService(UserManager<User> userManager, INotificationErrorService notificationErrorService, IUserRepository userRepository)
         {
             _userManager = userManager;
             _notificationErrorService = notificationErrorService;
+            _userRepository = userRepository;
         }
 
         public async Task<User> Login(string email, string password)

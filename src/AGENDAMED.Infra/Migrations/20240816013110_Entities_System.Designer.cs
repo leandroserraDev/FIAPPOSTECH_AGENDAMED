@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace AGENDAMED.Infra.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240808185004_Add_Schedule_Doctor")]
-    partial class Add_Schedule_Doctor
+    [Migration("20240816013110_Entities_System")]
+    partial class Entities_System
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -93,11 +93,16 @@ namespace AGENDAMED.Infra.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<long>("SpecialityID")
+                        .HasColumnType("bigint");
+
                     b.HasKey("ID");
 
                     b.HasIndex("DoctorID");
 
                     b.HasIndex("PatientID");
+
+                    b.HasIndex("SpecialityID");
 
                     b.ToTable("Appointment", (string)null);
                 });
@@ -157,18 +162,14 @@ namespace AGENDAMED.Infra.Migrations
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", b =>
                 {
-                    b.Property<long>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                    b.Property<string>("DoctorID")
+                        .HasColumnType("text");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("ID"));
+                    b.Property<long>("SpecialtyID")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("boolean");
-
-                    b.Property<string>("DoctorID")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<DateTime>("DtCreated")
                         .HasColumnType("timestamp without time zone");
@@ -176,12 +177,7 @@ namespace AGENDAMED.Infra.Migrations
                     b.Property<DateTime>("DtModified")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<long>("SpecialtyID")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("DoctorID");
+                    b.HasKey("DoctorID", "SpecialtyID");
 
                     b.HasIndex("SpecialtyID");
 
@@ -190,57 +186,29 @@ namespace AGENDAMED.Infra.Migrations
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", b =>
                 {
-                    b.Property<long>("ScheduleDoctorID")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("DoctorID")
                         .HasColumnType("text");
 
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("integer");
+                    b.Property<long>("DayOfWeek")
+                        .HasColumnType("bigint");
 
-                    b.Property<int>("Speciality")
-                        .HasColumnType("integer");
+                    b.Property<long>("Speciality")
+                        .HasColumnType("bigint");
 
-                    b.HasKey("ScheduleDoctorID", "DoctorID", "DayOfWeek", "Speciality");
+                    b.HasKey("DoctorID", "DayOfWeek", "Speciality");
 
-                    b.HasIndex("ScheduleDoctorID", "DoctorID", "Speciality");
+                    b.HasIndex("DoctorID", "Speciality");
 
                     b.ToTable("Schedule", (string)null);
                 });
 
-            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleHour", b =>
-                {
-                    b.Property<long>("ScheduleDoctorID")
-                        .HasColumnType("bigint");
-
-                    b.Property<string>("DoctorID")
-                        .HasColumnType("text");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Speciality")
-                        .HasColumnType("integer");
-
-                    b.Property<TimeSpan>("Hour")
-                        .HasColumnType("interval");
-
-                    b.HasKey("ScheduleDoctorID", "DoctorID", "DayOfWeek", "Speciality", "Hour");
-
-                    b.ToTable("ScheduleHour", (string)null);
-                });
-
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", b =>
                 {
-                    b.Property<long>("ID")
-                        .HasColumnType("bigint");
-
                     b.Property<string>("DoctorID")
                         .HasColumnType("text");
 
-                    b.Property<int>("Speciality")
-                        .HasColumnType("integer");
+                    b.Property<long>("SpecialityID")
+                        .HasColumnType("bigint");
 
                     b.Property<bool>("Deleted")
                         .HasColumnType("boolean");
@@ -251,11 +219,28 @@ namespace AGENDAMED.Infra.Migrations
                     b.Property<DateTime>("DtModified")
                         .HasColumnType("timestamp without time zone");
 
-                    b.HasKey("ID", "DoctorID", "Speciality");
-
-                    b.HasIndex("DoctorID");
+                    b.HasKey("DoctorID", "SpecialityID");
 
                     b.ToTable("ScheduleSpecialityDoctor", (string)null);
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleTime", b =>
+                {
+                    b.Property<string>("DoctorID")
+                        .HasColumnType("text");
+
+                    b.Property<long>("DayOfWeek")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("Speciality")
+                        .HasColumnType("bigint");
+
+                    b.Property<TimeSpan>("Time")
+                        .HasColumnType("interval");
+
+                    b.HasKey("DoctorID", "DayOfWeek", "Speciality", "Time");
+
+                    b.ToTable("ScheduleHour", (string)null);
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.patient.Patient", b =>
@@ -347,6 +332,24 @@ namespace AGENDAMED.Infra.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "7fbdb6ec-32de-4d1f-9856-de3c5bb9eeb1",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "56f0007e-84e2-4865-b825-e063828f9301",
+                            Email = "administrador@administrador.com",
+                            EmailConfirmed = true,
+                            LastName = "administrador@administrador.com",
+                            LockoutEnabled = false,
+                            Name = "administrador@administrador.com",
+                            PasswordHash = "AQAAAAEAACcQAAAAEPaxooTLLI7WsPfgIBM+dLgjtI2CN13XRZTl5aLSPgLuXgSTKC/wGOMiYlfiK5QwPg==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "a7b565ef-b7a6-4fa3-afc1-ca2a0ed7ab23",
+                            TwoFactorEnabled = false,
+                            UserName = "administrador@administrador.com"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -460,6 +463,13 @@ namespace AGENDAMED.Infra.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "7fbdb6ec-32de-4d1f-9856-de3c5bb9eeb1",
+                            RoleId = "1"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -486,27 +496,37 @@ namespace AGENDAMED.Infra.Migrations
                     b.HasOne("AGENDAMED.Domain.Entities.user.User", "Doctor")
                         .WithMany()
                         .HasForeignKey("DoctorID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("AGENDAMED.Domain.Entities.user.User", "Patient")
                         .WithMany()
                         .HasForeignKey("PatientID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("AGENDAMED.Domain.Entities.speciality.Speciality", "Speciality")
+                        .WithMany()
+                        .HasForeignKey("SpecialityID")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Doctor");
 
                     b.Navigation("Patient");
+
+                    b.Navigation("Speciality");
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.Doctor", b =>
                 {
-                    b.HasOne("AGENDAMED.Domain.Entities.user.User", null)
+                    b.HasOne("AGENDAMED.Domain.Entities.user.User", "User")
                         .WithOne("Doctor")
                         .HasForeignKey("AGENDAMED.Domain.Entities.user.doctor.Doctor", "UserID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", b =>
@@ -530,25 +550,25 @@ namespace AGENDAMED.Infra.Migrations
                 {
                     b.HasOne("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", null)
                         .WithMany("Schedule")
-                        .HasForeignKey("ScheduleDoctorID", "DoctorID", "Speciality")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleHour", b =>
-                {
-                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", null)
-                        .WithMany("ScheduleHours")
-                        .HasForeignKey("ScheduleDoctorID", "DoctorID", "DayOfWeek", "Speciality")
+                        .HasForeignKey("DoctorID", "Speciality")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", b =>
                 {
-                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.Doctor", null)
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", null)
                         .WithMany("SchedulesSpecialityDoctor")
-                        .HasForeignKey("DoctorID")
+                        .HasForeignKey("DoctorID", "SpecialityID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleTime", b =>
+                {
+                    b.HasOne("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", null)
+                        .WithMany("ScheduleTime")
+                        .HasForeignKey("DoctorID", "DayOfWeek", "Speciality")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -615,14 +635,17 @@ namespace AGENDAMED.Infra.Migrations
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.Doctor", b =>
                 {
-                    b.Navigation("SchedulesSpecialityDoctor");
-
                     b.Navigation("Specialities");
+                });
+
+            modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.DoctorSpecialities", b =>
+                {
+                    b.Navigation("SchedulesSpecialityDoctor");
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.Schedule", b =>
                 {
-                    b.Navigation("ScheduleHours");
+                    b.Navigation("ScheduleTime");
                 });
 
             modelBuilder.Entity("AGENDAMED.Domain.Entities.user.doctor.schedule.ScheduleSpecialityDoctor", b =>

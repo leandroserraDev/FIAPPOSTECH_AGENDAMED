@@ -128,6 +128,8 @@ namespace AGENDAMED.Services.Services.appointment
                 return null;
             }
 
+            entity.ID = result.ID;
+
             result.AddDate(entity.Date);
 
             var resultUpdate = await _appointmentRepository.Update(entity);

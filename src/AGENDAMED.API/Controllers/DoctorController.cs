@@ -75,7 +75,7 @@ namespace AGENDAMED.API.Controllers
             var result = await _userDoctorAppService.CreateDoctor(createDoctorViewModel);
 
 
-            return Ok();
+            return Ok(result);
         }
 
         [HttpPut("{id}")]
