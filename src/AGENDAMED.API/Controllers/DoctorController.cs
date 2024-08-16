@@ -66,51 +66,26 @@ namespace AGENDAMED.API.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDoctor(UserCreateDoctorViewModel createDoctorViewModel)
         {
-            if (!ModelState.IsValid)
-            {
-
-                return BadRequest();
-            }
-
+       
             var result = await _userDoctorAppService.CreateDoctor(createDoctorViewModel);
 
 
-            return Ok(result);
+           return await CustomResponse(result);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> EditDoctor(string id, UserEditDoctorViewModel editDoctorViewModel)
         {
-            if (!ModelState.IsValid)
-            {
-
-                return BadRequest();
-            }
-
+        
             var result = await _userDoctorAppService.EditDoctor(id, editDoctorViewModel);
-            if(result == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(result);
+            return await CustomResponse(result);
         }
         [HttpGet("{doctorID}")]
         public async Task<IActionResult> GetDoctorById(string doctorID)
         {
-            if (!ModelState.IsValid)
-            {
-
-                return BadRequest();
-            }
-
+        
             var result = await _userDoctorAppService.GetDoctorById(doctorID);
-            if (result == null)
-            {
-                return BadRequest();
-            }
-
-            return Ok(result);
+            return await CustomResponse(result);
         }
         #endregion
 
@@ -120,11 +95,7 @@ namespace AGENDAMED.API.Controllers
         {
                 var result = await _scheduleSpecialityDoctorAppService.Create(scheduleSpecialityDoctorCreateViewModel.ToDomain());
 
-            if(await _notificationErrorService.HasNotifications())
-            {
-                return BadRequest(new { Errors = _notificationErrorService.Notifications(), data = result });
-            }
-            return Ok(result);
+            return await CustomResponse(result);
 
         }
 
@@ -134,7 +105,7 @@ namespace AGENDAMED.API.Controllers
 
             var result = await _scheduleSpecialityDoctorAppService.GetSchedulesDoctor(doctorID);
 
-            return Ok(result);
+            return await CustomResponse(result);
 
         }
         [HttpGet("{doctorID}/schedule/{specialityID}")]
@@ -143,7 +114,7 @@ namespace AGENDAMED.API.Controllers
 
             var result = await _scheduleSpecialityDoctorAppService.GetScheduleSpecialitieDoctor(doctorID,(ESpecialty)specialityID);
 
-            return Ok(result);
+            return await CustomResponse(result);
 
         }
         [HttpGet("speciality/{id}")]
@@ -161,11 +132,7 @@ namespace AGENDAMED.API.Controllers
         {
             var result = await _scheduleSpecialityDoctorAppService.Edit(scheduleSpecialityDoctorCreateViewModel.ToDomain());
 
-            if (await _notificationErrorService.HasNotifications())
-            {
-                return BadRequest(new { Errors = _notificationErrorService.Notifications(), data = result });
-            }
-            return Ok(result);
+            return await CustomResponse(result);
         }
 
 
@@ -178,8 +145,7 @@ namespace AGENDAMED.API.Controllers
         {
             var result = await _doctorSpecialityAppService.GetDoctorSpecialities(doctorID);
 
-
-            return Ok(new {data= result });
+            return await CustomResponse(result);
         }
 
         [HttpGet("scheduleTime")]
@@ -202,7 +168,7 @@ namespace AGENDAMED.API.Controllers
                 return BadRequest(new {Erros = _notificationErrorService.Notifications(), data = result});
             }
 
-            return Ok(new {data = result});
+            return await CustomResponse(result);
         }
 
         [HttpPatch("{doctorID}/speciality/{specialityID}/mudarstatus")]
@@ -210,12 +176,7 @@ namespace AGENDAMED.API.Controllers
         {
             var result = await _doctorSpecialityAppService.MudarStatus(doctorID,specialityID);
 
-            if (await _notificationErrorService.HasNotifications())
-            {
-                return BadRequest(new { Erros = _notificationErrorService.Notifications(), data = result });
-            }
-
-            return Ok(new { data = result });
+            return await CustomResponse(result);
         }
 
         #endregion
@@ -226,8 +187,6 @@ namespace AGENDAMED.API.Controllers
         public async Task<IActionResult> GetAppointmens()
         {
             var appointments = await _appointmentService.GetAppointmentsUserLoggedDoctor();
-
-
 
             return await CustomResponse(appointments);
         }

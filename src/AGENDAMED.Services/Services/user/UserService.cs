@@ -175,6 +175,12 @@ namespace AGENDAMED.Services.Services.user
             result =  await _userManager.CreateAsync(user, password);
             if(!result.Succeeded)
             {
+
+                result.Errors.ToList().ForEach(obj =>
+                {
+                    _notificationErrorService.AddNotification(new(obj.Description));
+
+                });
                 return null;
             }
             await _userManager.AddToRoleAsync(user, "Doctor");
