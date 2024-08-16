@@ -5,9 +5,11 @@ using AGENDAMED.Domain.Interface.Services.notificationAppointHangFire;
 using AGENDAMED.Services.Services.appointment;
 using Hangfire;
 using Hangfire.Dashboard;
+using Microsoft.AspNetCore.Hosting;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 
@@ -25,12 +27,8 @@ builder.Services.AddCors();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 var app = builder.Build();
 
-app.UseHangfireDashboard("/hangfire", new DashboardOptions()
-{
-    Authorization = new[] { new AllowAllConnectionsFilter() },
-    IgnoreAntiforgeryToken = true
-});
 
+app.UseHangfireDashboard("/dashboard");
 app.UseHangfireServer();
 
 

@@ -31,9 +31,14 @@ namespace AGENDAMED.Services.Services.notification.appointmentHangFire
 
             });
 
+            if (!string.IsNullOrEmpty(emailTO)) 
+            {
+                var email = new EmailAppointment(emailTO, "Consulta em 2 horas", "Você tem uma consulta em duas horas", _configuration);
+                email.SendEmail();
+            }
 
-            var email = new EmailAppointment(emailTO, "Consulta em 2 horas", "Você tem uma consulta em duas horas", _configuration);
-            email.SendEmail();
+
+          
 
         }
     }
