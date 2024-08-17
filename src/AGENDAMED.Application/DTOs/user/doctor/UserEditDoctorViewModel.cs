@@ -12,6 +12,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor
     public class UserEditDoctorViewModel
     {
 
+        public string ID { get; set; }
         public string Nome { get; set; }
         public string Sobrenome { get; set; }
 
@@ -20,6 +21,7 @@ namespace AGENDAMED.Application.DTOs.user.doctor
         public User ToDomain()
         {
             var newUser = new User();
+            newUser.Id = ID;
             newUser.Name = Nome;
             newUser.LastName = Sobrenome;
 

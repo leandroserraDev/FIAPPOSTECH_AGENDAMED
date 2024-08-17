@@ -15,6 +15,7 @@ namespace AGENDAMED.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PatientController : MainController
     {
 
@@ -76,6 +77,7 @@ namespace AGENDAMED.API.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async  Task<IActionResult> Create(UserCreatePatientViewModel userCreatePatientViewModel)
         {
             var result = await _userPatientAppService.Create(userCreatePatientViewModel);

@@ -30,6 +30,7 @@ namespace AGENDAMED.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DoctorController : MainController
     {
 
@@ -59,7 +60,7 @@ namespace AGENDAMED.API.Controllers
         public async Task<IActionResult> GetDoctors()
         {
             var result = await _userDoctorAppService.GetDoctors();
-            return Ok(result);
+            return await CustomResponse(result);
         }
 
         #region User Doctor
@@ -163,11 +164,7 @@ namespace AGENDAMED.API.Controllers
         {
             var result = await _doctorSpecialityAppService.Create(createViewModel);
 
-            if (await _notificationErrorService.HasNotifications())
-            {
-                return BadRequest(new {Erros = _notificationErrorService.Notifications(), data = result});
-            }
-
+    
             return await CustomResponse(result);
         }
 
